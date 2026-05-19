@@ -9,8 +9,8 @@ export const siteConfig = {
     instagram: 'https://www.instagram.com/jokas.bdg/'
   },
   heroImages: [
-    "src/assets/1.jpg", // Gambar 1 (Meeting)
-    "src/assets/2.jpg", // Gambar 2 (Teamwork)
-    "https://ik.imagekit.io/ciev6dpgs/jokas/WhatsApp%20Image%202026-05-19%20at%2014.27.52.jpeg", // Gambar 3 (Creative)
+    "https://ik.imagekit.io/ciev6dpgs/jokas/2.jpg", // Gambar 1 (Meeting)
+    "https://ik.imagekit.io/ciev6dpgs/jokas/1.jpg", // Gambar 2 (Teamwork)
+    "https://ik.imagekit.io/ciev6dpgs/jokas/1.jpg", // Gambar 3 (Creative)
   ],
 };
