@@ -1,0 +1,42 @@
+export const testimonials = [
+  {
+    id: 1,
+    name: "Rizky Ramadhan",
+    role: "Mahasiswa Semester 7",
+    category: "Academic",
+    text: "Jokas bener-bener penyelamat! Olah data skripsi pake SPSS jadi cepet banget dan dapet bimbingan sampe paham. Nilai A di tangan!",
+    stars: 5,
+  },
+  {
+    id: 2,
+    name: "Sari Puspita",
+    role: "Pelajar SMA",
+    category: "Academic",
+    text: "PR Matematika dan Fisika jadi gampang banget dipahami. Penjelasannya detail, nggak cuma dikasih jawaban doang. Top!",
+    stars: 5,
+  },
+  {
+    id: 3,
+    name: "Budi Ardiansyah",
+    role: "Owner UMKM Keripik",
+    category: "Digital",
+    text: "Bikin landing page buat jualan di Jokas hasilnya profesional. CS-nya ramah dan harganya terjangkau banget buat pemula kayak saya.",
+    stars: 5,
+  },
+  {
+    id: 4,
+    name: "Amanda Putri",
+    role: "Mahasiswa",
+    category: "Academic",
+    text: "Penyusunan jurnal internasional dibantu bgt sama Jokas. Grammar-nya oke dan referensinya kredibel. Sangat membantu!",
+    stars: 5,
+  },
+  {
+    id: 5,
+    name: "Kevin Sanjaya",
+    role: "UI/UX Enthusiast",
+    category: "Digital",
+    text: "Belajar bikin UI/UX di Jokas bener-bener dari nol sampe bisa. Portfolionya jadi keren sekarang. Recommended!",
+    stars: 5,
+  },
+];
