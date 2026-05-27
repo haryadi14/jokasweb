@@ -13,6 +13,7 @@ import Proofs from './sections/Proofs'; // Import ini
 import FAQ from './sections/FAQ';
 import Contact from './sections/Contact';
 import { siteConfig } from './data/siteConfig';
+import ChatAI from './components/ChatAI'; // Import ini
 
 function App() {
   useEffect(() => {
@@ -37,7 +38,7 @@ function App() {
           <FAQ />
           <Contact />
         </main>
-
+<ChatAI />
         <footer className="bg-slate-900 py-12 text-center border-t border-white/5">
             <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.4em]">
               © {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.
