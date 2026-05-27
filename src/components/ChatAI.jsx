@@ -78,6 +78,8 @@ const chatCompletion = await groq.chat.completions.create({
     setIsTyping(false);
   }
 };
+const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"];
+
 
   return (
     <div className="fixed bottom-24 right-6 z-[999] flex flex-col items-end">
@@ -126,7 +128,17 @@ const chatCompletion = await groq.chat.completions.create({
                 </div>
               )}
             </div>
-
+<div className="flex gap-2 mb-2 overflow-x-auto no-scrollbar">
+  {quickActions.map(action => (
+    <button 
+      key={action}
+      onClick={() => setInput(action)}
+      className="text-[10px] bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap hover:bg-primary-50 transition-colors"
+    >
+      {action}
+    </button>
+  ))}
+</div>
             {/* Input Area */}
             <div className="p-4 bg-white border-t border-slate-100 flex gap-2">
               <input
