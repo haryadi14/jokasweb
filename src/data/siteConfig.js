@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "JT JOKI TUGAS",
+  name: "JOKAS.BDG",
   tagline: "Partner Terpercaya untuk Akademis & Solusi Digital",
   description: "Dari tugas sekolah hingga solusi website profesional, Jokas hadir membantu mempermudah segala kebutuhan Anda dengan kualitas terbaik.",
   whatsapp: "6285137270793", 
