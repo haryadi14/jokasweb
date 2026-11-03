@@ -38,9 +38,13 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Toggle */}
-        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X /> : <Menu />}
-        </button>
+       <button 
+  className="md:hidden" 
+  onClick={() => setIsOpen(!isOpen)}
+  aria-label={isOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
+>
+  {isOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+</button>
       </div>
 
       {/* Mobile Menu Overlay */}
