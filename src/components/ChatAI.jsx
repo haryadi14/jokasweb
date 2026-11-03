@@ -6,7 +6,7 @@ import Groq from "groq-sdk";
 // 1. Inisialisasi Groq
 const groq = new Groq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
-  dangerouslyAllowBrowser: true // Diperlukan untuk menjalankan di sisi client (browser)
+  dangerouslyAllowBrowser: true // Diperlukan untuk browser client-side
 });
 
 const ChatAI = () => {
@@ -25,62 +25,65 @@ const ChatAI = () => {
   }, [messages, isTyping]);
 
   const handleChat = async () => {
-  if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
 
-  const userMessage = { role: "user", text: input };
-  setMessages((prev) => [...prev, userMessage]);
-  const currentInput = input;
-  setInput("");
-  setIsTyping(true);
+    const userMessage = { role: "user", text: input };
+    setMessages((prev) => [...prev, userMessage]);
+    const currentInput = input;
+    setInput("");
+    setIsTyping(true);
 
-  try {
-    // ... di dalam handleChat, bagian chatCompletion
-const chatCompletion = await groq.chat.completions.create({
-  messages: [
-    {
-      role: "system",
-      content: `Anda adalah "Jokas Assistant", asisten pintar dari Jokas.
-      
-      TUGAS UTAMA: 
-      Memberikan informasi awal mengenai layanan Jokas (Joki Tugas & Web Dev) dan melakukan filter pertanyaan.
+    try {
+      const chatCompletion = await groq.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: `Anda adalah "Jokas Assistant", asisten pintar dari Jokas.
+            
+            TUGAS UTAMA: 
+            Memberikan informasi awal mengenai layanan Jokas (Joki Tugas & Web Dev) dan melakukan filter pertanyaan.
 
-      ATURAN PENTING (HUMAN HANDOVER):
-      1. Jika user bertanya tentang DETAIL ISI materi tugas (misal: "tolong kerjakan soal matematika ini...", "buatkan kesimpulan dari teks ini...", "jelaskan algoritma pencarian di aplikasi saya...").
-      2. Jika pertanyaan mengandung instruksi teknis yang sangat KOMPLEKS atau membutuhkan analisis mendalam.
-      3. Jika pertanyaan berkaitan dengan HARGA KHUSUS atau NEGOSIASI.
-      
-      TINDAKAN:
-      Jangan mencoba menjawab detail teknis tersebut sendiri. Katakan secara ramah bahwa:
-      "Untuk detail pengerjaan materi atau spesifikasi teknis yang mendalam seperti ini, sebaiknya Kakak berdiskusi langsung dengan Owner/Human Expert Jokas via WhatsApp agar hasilnya 100% akurat dan sesuai ekspektasi. Mau saya berikan link kontak aslinya?"
+            ATURAN PENTING (HUMAN HANDOVER):
+            1. Jika user bertanya tentang DETAIL ISI materi tugas (misal: "tolong kerjakan soal matematika ini...", "buatkan kesimpulan dari teks ini...", "jelaskan algoritma pencarian di aplikasi saya...").
+            2. Jika pertanyaan mengandung instruksi teknis yang sangat KOMPLEKS atau membutuhkan analisis mendalam.
+            3. Jika pertanyaan berkaitan dengan HARGA KHUSUS atau NEGOSIASI.
+            
+            TINDAKAN:
+            Jangan mencoba menjawab detail teknis tersebut sendiri. Katakan secara ramah bahwa:
+            "Untuk detail pengerjaan materi atau spesifikasi teknis yang mendalam seperti ini, sebaiknya Kakak berdiskusi langsung dengan Owner/Human Expert Jokas via WhatsApp agar hasilnya 100% akurat dan sesuai ekspektasi. Mau saya berikan link kontak aslinya?"
 
-      ATURAN UMUM:
-      - Jawab pertanyaan umum tentang "Layanan apa saja?", "Jokas itu apa?", "Bisa bantu skripsi?" secara singkat dan padat.
-      - JANGAN berikan link kontak di setiap jawaban (hanya jika diminta atau saat menyarankan human handover).
-      - Gunakan Bahasa Indonesia yang santai,bahasa gaul gen z, solutif, dan profesional.
+            ATURAN UMUM:
+            - Jawab pertanyaan umum tentang "Layanan apa saja?", "Jokas itu apa?", "Bisa bantu skripsi?" secara singkat dan padat.
+            - JANGAN berikan link kontak di setiap jawaban (hanya jika diminta atau saat menyarankan human handover).
+            - Gunakan Bahasa Indonesia yang santai, bahasa gaul gen z, solutif, dan profesional.
 
-      DETAIL KONTAK (Berikan hanya saat momen handover atau diminta):
-      - WhatsApp: 085137270793 (https://wa.me/6285137270793)
-      - Instagram: @jokas.bdg (https://www.instagram.com/jokas.bdg/)`
-    },
-    {
-      role: "user",
-      content: currentInput
+            DETAIL KONTAK (Berikan hanya saat momen handover atau diminta):
+            - WhatsApp: 085137270793 (https://wa.me/6285137270793)
+            - Instagram: @jokas.bdg (https://www.instagram.com/jokas.bdg/)`
+          },
+          {
+            role: "user",
+            content: currentInput
+          }
+        ],
+        // Diganti ke model Groq yang aktif & stabil
+        model: "llama-3.1-8b-instant",
+      });
+
+      const botResponse = chatCompletion.choices[0]?.message?.content || "Maaf, saya tidak mengerti.";
+      setMessages((prev) => [...prev, { role: "assistant", text: botResponse }]);
+    } catch (error) {
+      console.error("Error Groq:", error);
+      setMessages((prev) => [
+        ...prev, 
+        { role: "assistant", text: "Maaf, koneksi saya sedang terganggu. Langsung hubungi WA 085137270793 ya!" }
+      ]);
+    } finally {
+      setIsTyping(false);
     }
-  ],
-  model: "llama-3.3-70b-versatile",
-});
+  };
 
-    const botResponse = chatCompletion.choices[0]?.message?.content || "Maaf, saya tidak mengerti.";
-    setMessages((prev) => [...prev, { role: "assistant", text: botResponse }]);
-  } catch (error) {
-    console.error("Error Groq:", error);
-    setMessages((prev) => [...prev, { role: "assistant", text: "Maaf, koneksi saya sedang terganggu. Langsung hubungi WA 085137270793 ya!" }]);
-  } finally {
-    setIsTyping(false);
-  }
-};
-const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"];
-
+  const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"];
 
   return (
     <div className="fixed bottom-24 right-6 z-[999] flex flex-col items-end">
@@ -100,10 +103,14 @@ const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"
                 </div>
                 <div>
                   <p className="text-xs font-black uppercase tracking-widest leading-none mb-1">Jokas Assistant</p>
-                  <p className="text-[9px] opacity-70 font-bold uppercase tracking-tighter italic">JO AI</p>
+                  <p className="text-[10px] text-white/90 font-bold uppercase tracking-tighter italic">JO AI</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all">
+              <button 
+                onClick={() => setIsOpen(false)} 
+                aria-label="Tutup jendela chat"
+                className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all"
+              >
                 <X size={16} />
               </button>
             </div>
@@ -115,7 +122,7 @@ const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"
                   <div className={`max-w-[85%] p-4 rounded-[1.8rem] text-sm leading-relaxed shadow-sm ${
                     msg.role === "user" 
                     ? "bg-primary-600 text-white rounded-tr-none font-medium" 
-                    : "bg-white text-slate-700 rounded-tl-none border border-slate-100"
+                    : "bg-white text-slate-800 rounded-tl-none border border-slate-100"
                   }`}>
                     {msg.text}
                   </div>
@@ -123,23 +130,28 @@ const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"
               ))}
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-white border border-slate-100 p-4 rounded-[1.5rem] rounded-tl-none flex gap-1 shadow-sm font-bold text-[10px] text-slate-400 italic">
+                  <div className="bg-white border border-slate-100 p-4 rounded-[1.5rem] rounded-tl-none flex gap-1 shadow-sm font-bold text-[10px] text-slate-600 italic">
                     Memikirkan jawaban...
                   </div>
                 </div>
               )}
             </div>
-<div className="flex gap-2 mb-2 overflow-x-auto no-scrollbar">
-  {quickActions.map(action => (
-    <button 
-      key={action}
-      onClick={() => setInput(action)}
-      className="text-[10px] bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap hover:bg-primary-50 transition-colors"
-    >
-      {action}
-    </button>
-  ))}
-</div>
+
+            {/* Quick Actions */}
+            <div className="flex gap-2 px-4 py-2 overflow-x-auto no-scrollbar border-t border-slate-50">
+              {quickActions.map(action => (
+                <button 
+                  key={action}
+                  type="button"
+                  aria-label={`Pilih opsi ${action}`}
+                  onClick={() => setInput(action)}
+                  className="text-xs bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                >
+                  {action}
+                </button>
+              ))}
+            </div>
+
             {/* Input Area */}
             <div className="p-4 bg-white border-t border-slate-100 flex gap-2">
               <input
@@ -148,9 +160,14 @@ const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleChat()}
                 placeholder="Tanya harga joki..."
+                aria-label="Ketik pesan pertanyaan"
                 className="flex-1 bg-slate-100 border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-primary-500 outline-none text-slate-800"
               />
-              <button onClick={handleChat} className="bg-primary-600 text-white p-3 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary-200">
+              <button 
+                onClick={handleChat} 
+                aria-label="Kirim pesan ke asisten AI"
+                className="bg-primary-600 text-white p-3 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary-200"
+              >
                 <Send size={20} />
               </button>
             </div>
@@ -158,12 +175,17 @@ const quickActions = ["Harga Jasa", "Pembuatan Layanan Web", "Proses Pengerjaan"
         )}
       </AnimatePresence>
 
-      {/* Toggle Button */}
+      {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Tutup AI Assistant" : "Buka AI Assistant"}
         className="bg-primary-600 text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-90 transition-all flex items-center gap-3 group"
       >
-        {!isOpen && <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-500 text-xs font-black uppercase tracking-[0.2em] whitespace-nowrap pl-2">Ask AI</span>}
+        {!isOpen && (
+          <span className="max-w-0 overflow-hidden group-hover:max-w-[100px] transition-all duration-500 text-xs font-black uppercase tracking-[0.2em] whitespace-nowrap pl-2">
+            Ask AI
+          </span>
+        )}
         <Sparkles size={24} className={isOpen ? "rotate-45" : ""} />
       </button>
     </div>
