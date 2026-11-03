@@ -67,7 +67,7 @@ const ChatAI = () => {
           }
         ],
         // Diganti ke model Groq yang aktif & stabil
-        model: "llama-3.1-8b-instant",
+        model: "openai/gpt-oss-20b",
       });
 
       const botResponse = chatCompletion.choices[0]?.message?.content || "Maaf, saya tidak mengerti.";
