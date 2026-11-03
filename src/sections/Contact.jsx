@@ -25,14 +25,24 @@ const Contact = () => {
                 <MessageCircle size={20} /> Chat via WhatsApp
               </Button>
               <div className="flex items-center justify-center gap-6 text-white pt-4 md:pt-0">
-                {/* Gunakan Camera sebagai pengganti Instagram */}
-                <a href={siteConfig.socials.instagram} className="hover:text-primary-400 transition-colors">
-                   <SiInstagram size={24} />
-                </a>
-                <a href={`mailto:${siteConfig.email}`} className="hover:text-primary-400 transition-colors">
-                  <Mail size={24} />
-                </a>
-              </div>
+  <a 
+    href={siteConfig.socials.instagram} 
+    aria-label="Kunjungi Instagram Jokas" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="hover:text-primary-400 transition-colors"
+  >
+     <SiInstagram size={24} />
+  </a>
+  
+  <a 
+    href={`mailto:${siteConfig.email}`} 
+    aria-label={`Kirim email ke ${siteConfig.email}`} 
+    className="hover:text-primary-400 transition-colors"
+  >
+    <Mail size={24} />
+  </a>
+</div>
             </div>
           </div>
         </div>
